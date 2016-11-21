@@ -9,6 +9,6 @@ public interface UsersDao {
     List<User> findAll();
     void update(User user);
     void save(User user);
-    User find(int id);
+    User findByCity(String city);
     void delete(int id);
 }

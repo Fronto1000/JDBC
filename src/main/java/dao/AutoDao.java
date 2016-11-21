@@ -4,7 +4,7 @@ import model.Auto;
 
 import java.util.List;
 
-interface AutoDao {
+public interface AutoDao {
 
     List<Auto> findAll();
     void update(Auto auto);

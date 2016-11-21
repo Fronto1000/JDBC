@@ -1,5 +1,6 @@
 package factory;
 
+import dao.AutoDao;
 import dao.UsersDao;
 
 import java.io.FileInputStream;
@@ -12,6 +13,7 @@ import java.util.Properties;
 class DaoFactory {
     private static DaoFactory instance;
     private UsersDao usersDao;
+    private AutoDao autoDao;
     private Properties properties;
 
     static {
@@ -20,10 +22,13 @@ class DaoFactory {
     private DaoFactory() {
         properties = new Properties();
         try {
-            properties.load(new FileInputStream("D:\\Java\\HomeWork\\JDBC\\src\\main\\resources\\application.properties"));
-            String daoClassName = properties.getProperty("users.dao.class");
-            Constructor constructor = Class.forName(daoClassName).getConstructor(Connection.class);
-            usersDao = (UsersDao) constructor.newInstance(ConnectionFactory.getInstance().getConnection());
+            properties.load(new FileInputStream("C:\\HomeWork\\JDBC\\src\\main\\resources\\application.properties"));
+            String daoUserClassName = properties.getProperty("users.dao.class");
+            String daoAutoClassName = properties.getProperty("auto.dao.class");
+            Constructor constructorUser = Class.forName(daoUserClassName).getConstructor(Connection.class);
+            Constructor constructorAuto = Class.forName(daoAutoClassName).getConstructor(Connection.class);
+            usersDao = (UsersDao) constructorUser.newInstance(ConnectionFactory.getInstance().getConnection());
+            autoDao = (AutoDao) constructorAuto.newInstance(ConnectionFactory.getInstance().getConnection());
 
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -43,8 +48,11 @@ class DaoFactory {
     public UsersDao getUsersDao() {
         return usersDao;
     }
-
+    public AutoDao getAutoDao() {
+        return autoDao;
+    }
     public static DaoFactory getInstance() {
         return instance;
     }
+
 }
