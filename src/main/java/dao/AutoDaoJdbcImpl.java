@@ -25,11 +25,11 @@ public class AutoDaoJdbcImpl implements AutoDao{
         this.connection = connection;
     }
 
-    public List<Auto> findAll() {
+    public ArrayList<Auto> findAll() {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SQL_SELECT_AUTO);
-            List<Auto> resultList = new ArrayList<Auto>();
+            ArrayList<Auto> resultList = new ArrayList<Auto>();
             while (resultSet.next()){
                 int autoId = resultSet.getInt("id");
                 String autoModel = resultSet.getString("model");
@@ -72,8 +72,9 @@ public class AutoDaoJdbcImpl implements AutoDao{
 
     public Auto find(int memberId) {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_AUTO_BY_MEMBER);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_AUTO_BY_MEMBER);
+            preparedStatement.setInt(1, memberId);
+            ResultSet resultSet = preparedStatement.executeQuery();
             int autoId = resultSet.getInt("id");
             String autoModel = resultSet.getString("model");
             int autoMileage = resultSet.getInt("mileage");

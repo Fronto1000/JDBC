@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-class ConnectionFactory {
+public class ConnectionFactory {
     private static ConnectionFactory instance;
     private Connection connection;
     private Properties properties;
@@ -18,7 +18,7 @@ class ConnectionFactory {
     private ConnectionFactory() {
         properties = new Properties();
         try {
-            properties.load(new FileInputStream("D:\\Java\\HomeWork\\JDBC\\src\\main\\resources\\application.properties"));
+            properties.load(new FileInputStream("C:\\HomeWork\\JDBC\\src\\main\\resources\\application.properties"));
             String driverName = properties.getProperty("database.driver");
             String url = properties.getProperty("database.url");
             String name = properties.getProperty("database.name");

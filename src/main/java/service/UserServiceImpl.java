@@ -5,6 +5,7 @@ import dao.UsersDao;
 import model.Auto;
 import model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -34,11 +35,17 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    public List<User> getUsersByCity(String cityName) {
-        return null;
+    public ArrayList<User> getUsersByCity(String cityName) {
+        return usersDao.findAll();
     }
 
-    public List<Auto> getAutoByCity(List<User> users) {
-        return null;
+    public ArrayList<Auto> getAutoByCity(String city) {
+        ArrayList<User> usersByCity = usersDao.findByCity(city);
+        ArrayList<Auto> autos = new ArrayList<Auto>();
+        for(User currentUser : usersByCity){
+            Auto auto = autoDao.find(currentUser.getId());
+            autos.add(auto);
+        }
+        return autos;
     }
 }

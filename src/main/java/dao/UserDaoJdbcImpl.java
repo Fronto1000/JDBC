@@ -1,26 +1,21 @@
 package dao;
 
 import model.User;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class UserDaoJdbcImpl implements UsersDao {
 
     // language=SQL
     private static final String SQL_SELECT_USER ="SELECT * FROM group_member";
     // language=SQL
-    private static final String SQL_UPDATE_USER = "UPDATE group_member SET name = ?, age = ?, city = ? WHERE id = ?";
+    private static final String SQL_UPDATE_USER ="UPDATE group_member SET name = ?, age = ?, city = ? WHERE id =?";
     // language=SQL
-    private static final String SQL_INSERT_USER = "INSERT group_member(id, name, age, city) VALUES(?, ?, ?,?)";
+    private static final String SQL_INSERT_USER ="INSERT INTO group_member (id, name, age, city) VALUES(?,?, ?, ?)";
     // language=SQL
-    private static final String SQL_SELECT_USER_BY_CITY = "SELECT * FROM group_member WHERE city=?";
+    private static final String SQL_SELECT_USER_BY_CITY ="SELECT * FROM group_member WHERE city =?";
     // language=SQL
-    private static final String SQL_DELETE_USER = "DELETE * FROM group_member WHERE id = ?";
+    private static final String SQL_DELETE_USER ="DELETE FROM group_member WHERE id = ?";
 
     private Connection connection;
 
@@ -28,19 +23,14 @@ public class UserDaoJdbcImpl implements UsersDao {
         this.connection = connection;
     }
 
-    public List<User> findAll() {
+    public ArrayList<User> findAll() {
 
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SQL_SELECT_USER);
-
-            List<User> resultList = new ArrayList<User>();
+            ArrayList<User> resultList = new ArrayList<User>();
             while (resultSet.next()){
-                int userId = resultSet.getInt("id");
-                String userName = resultSet.getString("name");
-                int userAge = resultSet.getInt("age");
-                String userCity = resultSet.getString("city");
-                User user = new User(userId,userName,userAge,userCity);
+                User user = new User(resultSet.getInt("id"),resultSet.getString("name"),resultSet.getInt("age"),resultSet.getString("city"));
                 resultList.add(user);
             }
             return resultList;
@@ -77,15 +67,17 @@ public class UserDaoJdbcImpl implements UsersDao {
         }
     }
 
-    public User findByCity(String city) {
+    public ArrayList<User> findByCity(String city) {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_USER_BY_CITY);
-            int userId = resultSet.getInt("id");
-            String userName = resultSet.getString("name");
-            int userAge = resultSet.getInt("age");
-            String userCity = resultSet.getString("city");
-            return new User(userId,userName,userAge,userCity);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_BY_CITY);
+            preparedStatement.setString(1, city);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<User> resultList = new ArrayList<User>();
+            while (resultSet.next()){
+                User user = new User(resultSet.getInt("id"),resultSet.getString("name"),resultSet.getInt("age"),resultSet.getString("city"));
+                resultList.add(user);
+            }
+            return resultList;
         }catch (SQLException e) {
             throw new IllegalStateException(e);
         }

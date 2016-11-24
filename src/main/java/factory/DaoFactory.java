@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.util.Properties;
 
-class DaoFactory {
+public class DaoFactory {
     private static DaoFactory instance;
     private UsersDao usersDao;
     private AutoDao autoDao;

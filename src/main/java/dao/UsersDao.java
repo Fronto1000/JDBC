@@ -2,13 +2,14 @@ package dao;
 
 import model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface UsersDao {
 
-    List<User> findAll();
+    ArrayList<User> findAll();
     void update(User user);
     void save(User user);
-    User findByCity(String city);
+    ArrayList<User> findByCity(String city);
     void delete(int id);
 }
