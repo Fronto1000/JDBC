@@ -11,13 +11,13 @@ public class AutoDaoJdbcImpl implements AutoDao{
     // language=SQL
     private static final String SQL_SELECT_AUTO = "SELECT * FROM auto";
     // language=SQL
-    private final String SQL_UPDATE_AUTO = "UPDATE auto SET member_id = ? WHERE id = ?";
+    private final String SQL_UPDATE_AUTO = "UPDATE auto SET memberid = ? WHERE id = ?";
     // language=SQL
-    static final String SQL_INSERT_AUTO = "INSERT INTO auto(id, model, mileage, memberId) VALUES(?, ?, ?,?)";
+    static final String SQL_INSERT_AUTO = "INSERT INTO auto(id, model, mileage, memberid) VALUES(?, ?, ?,?)";
     // language=SQL
     static final String SQL_DELETE_AUTO = "DELETE FROM auto WHERE id=?";
     // language=SQL
-    static final String SQL_SELECT_AUTO_BY_MEMBER = "SELECT * FROM auto WHERE memberId = ?";
+    static final String SQL_SELECT_AUTO_BY_MEMBER = "SELECT * FROM auto WHERE memberid =?";
 
     private Connection connection;
 
@@ -31,11 +31,7 @@ public class AutoDaoJdbcImpl implements AutoDao{
             ResultSet resultSet = statement.executeQuery(SQL_SELECT_AUTO);
             ArrayList<Auto> resultList = new ArrayList<Auto>();
             while (resultSet.next()){
-                int autoId = resultSet.getInt("id");
-                String autoModel = resultSet.getString("model");
-                int autoMileage = resultSet.getInt("mileage");
-                int autoMemberId = resultSet.getInt("member_id");
-                Auto auto = new Auto(autoId,autoModel,autoMileage,autoMemberId);
+                Auto auto = new Auto(resultSet.getInt("id"),resultSet.getString("model"),resultSet.getInt("mileage"),resultSet.getInt("memberid"));
                 resultList.add(auto);
             }
             return resultList;
@@ -70,17 +66,13 @@ public class AutoDaoJdbcImpl implements AutoDao{
         }
     }
 
-    public Auto find(int memberId) {
+    public Auto find(int memberid) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_AUTO_BY_MEMBER);
-            preparedStatement.setInt(1, memberId);
+            preparedStatement.setInt(1, memberid);
             ResultSet resultSet = preparedStatement.executeQuery();
-            int autoId = resultSet.getInt("id");
-            String autoModel = resultSet.getString("model");
-            int autoMileage = resultSet.getInt("mileage");
-            int autoMemberId = resultSet.getInt("member_id");
-            Auto auto = new Auto(autoId,autoModel,autoMileage,autoMemberId);
-            return auto;
+            resultSet.next();
+            return  new Auto(resultSet.getInt("id"),resultSet.getString("model"),resultSet.getInt("mileage"),resultSet.getInt("memberid"));
         }catch (SQLException e) {
             throw new IllegalStateException(e);
         }

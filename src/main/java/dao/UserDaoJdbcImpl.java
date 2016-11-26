@@ -88,7 +88,6 @@ public class UserDaoJdbcImpl implements UsersDao {
             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_USER);
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
-
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }

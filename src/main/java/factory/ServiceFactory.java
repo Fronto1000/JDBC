@@ -1,5 +1,6 @@
 package factory;
 
+import dao.AutoDao;
 import dao.UsersDao;
 import service.UserService;
 
@@ -29,9 +30,8 @@ public class ServiceFactory {
                     FileInputStream("C:\\HomeWork\\JDBC\\src\\main\\resources\\application.properties"));
 
             String serviceClassName = properties.getProperty("users.service.class");
-
-            Constructor constructor = Class.forName(serviceClassName).getConstructor(UsersDao.class);
-            userService = (UserService)constructor.newInstance(DaoFactory.getInstance().getUsersDao());
+            Constructor constructor = Class.forName(serviceClassName).getConstructor(UsersDao.class, AutoDao.class);
+            userService = (UserService)constructor.newInstance(DaoFactory.getInstance().getUsersDao(),DaoFactory.getInstance().getAutoDao());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         } catch (ClassNotFoundException e) {
